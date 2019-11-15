@@ -13,7 +13,6 @@ from requests import get
 from re import findall
 from datetime import datetime
 from socket import gethostbyname
-from time import sleep
 from io import StringIO
 from os.path import isfile
 
@@ -113,7 +112,6 @@ ap = ArgumentParser(description="Options")
 ap.add_argument('-u', '--url', help='URL to the site', required=True)
 ap.add_argument('-o', '--output', help='Output file')
 ap.add_argument('-w', '--wordlist', help='Path to cralwing wordlist')
-ap.add_argument('--headers', help='Modify')
 args = vars(ap.parse_args())
 
 url = args['url']
