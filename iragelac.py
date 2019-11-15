@@ -197,7 +197,8 @@ if output:
 			if urls:
 				f.write('\nᴜʀʟ ᴄʀᴀᴡʟᴇʀ\n')
 				for url in urls:
-					f.write(url)
+					f.write('	'+url)
+					f.write('\n')
 	except FileNotFoundError:
 		print(colored('[-]', 'red'), 
 					'The path you entered is not valid for writing a file.', 
