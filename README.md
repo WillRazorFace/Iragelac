@@ -16,20 +16,14 @@ Install these packages from the *"requirements.txt"* file ```pip install -r requ
 
 Iragelac, for the time being, can capture emails, links, whois domain information, and search for directories on the target host, if given a wordlist of usage.
 
+- Example
+
 ![alt text](https://i.imgur.com/mQLOg62.gif)
 
-- Email Finder
+- Output file
 
-![alt text](https://i.imgur.com/PsZFqfS.png)
+![alt text](https://i.imgur.com/EfL7z4m.gif)
 
-- Link Finder
+## Contact
 
-![alt text](https://i.imgur.com/r12v568.png)
-
-- WhoIS
-
-![alt text](https://i.imgur.com/sBenoWQ.png)
-
-- Crawler
-
-![alt text](https://i.imgur.com/3g5zY5j.png)
+You can talk to me through this email <willrazorface90s@gmail.com>
