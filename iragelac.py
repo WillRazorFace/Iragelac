@@ -74,7 +74,7 @@ def crawler(wordlist:str, urlink:str):
 			urls = f.readlines()
 		urlok = 0
 		urlforb = 0
-		urls = []
+		fndurls = []
 		for url in urls:
 			crawled = urlink+'/'+url.strip('\n')
 			try:
@@ -84,17 +84,17 @@ def crawler(wordlist:str, urlink:str):
 			if vrfy.status_code == 200:
 				print('	', colored('[+]', 'green'), crawled)
 				urlok += 1
-				urls.append(crawled)
+				fndurls.append(crawled)
 			elif vrfy.status_code == 403:
 				print('	', colored('[!]', 'yellow'), crawled)
 				urlforb += 1
-				urls.append(crawled)
+				fndurls.append(crawled)
 		if urlok or urlforb:
 			print('\n')
 			print('	CRAWLED', colored(urlok+urlforb, 'blue'), 'URL')
 			print('	',colored(urlok, 'green'), 'OK CODE')
 			print('	',colored(urlforb, 'yellow'), 'FORBIDDEN CODE','\n')
-			return urls
+			return fndurls
 		else:
 			print('	', colored('[-]', 'red'), 'No URL crawled', colored('[-]', 'red'), '\n')
 	else:
