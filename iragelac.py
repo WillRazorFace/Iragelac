@@ -15,6 +15,7 @@ from datetime import datetime
 from socket import gethostbyname
 from io import StringIO
 from os.path import isfile
+from time import sleep
 
 def emailfinder(html:str):
 	fndemail = []
