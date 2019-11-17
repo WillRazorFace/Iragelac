@@ -4,7 +4,7 @@
 # Contact - willrazorface90s@gmail.com
 # Coding - utf-8
 
-# Usage - python3.x iragelac.py -u url -w wordlist -o output
+# Usage - python3.x iragelac.py -u [URL] -w [WORDLIST] -o [OUTPUT] --headers [PARAM1]: [VALUE1] [PARAM2]: [VALUE2] ...
 
 from argparse import ArgumentParser
 from termcolor import colored
@@ -108,18 +108,25 @@ iragelac = """ ___ ____      _    ____ _____ _        _    ____
 |___|_| \_\/_/   \_\____|_____|_____/_/   \_\____|
 """
 
-ap = ArgumentParser(description="Options")
+ap = ArgumentParser(description="Iragelac Script")
 ap.add_argument('-u', '--url', help='URL to the site', required=True)
 ap.add_argument('-o', '--output', help='Output file')
 ap.add_argument('-w', '--wordlist', help='Path to cralwing wordlist')
+ap.add_argument('--headers', help='Headers for the request', nargs='*')
 args = vars(ap.parse_args())
 
 url = args['url']
 output = args['output']
 wordlist = args['wordlist']
+headlist = args['headers']
+headers = []
+if headlist:
+    for i in headlist:
+        headers.append(i.replace(':', ''))
+    headers = {headers[i]: headers[i+1] for i in range(0, len(headers), 2)}
 
 try:
-	req = get(url)
+	req = get(url, headers=headers)
 except requests.exceptions.Timeout:
 	print('\n', colored('[-]', 'red'), 'Timeout', colored('[-]','red'), '\n')
 	exit(1)
