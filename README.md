@@ -2,7 +2,7 @@
 
 Iragelac is a python script designed to capture data from web pages.
 
-**Usage** - ```python3.x iragelac.py -u [URL] -w [WORDLIST] -o [OUTPUT]```
+**Usage** - ```python3.x iragelac.py -u [URL] -w [WORDLIST] -o [OUTPUT] --headers [PARAM1]: [VALUE1] [PARAM2]: [VALUE2] ...```
 
 ## Requirements
 
