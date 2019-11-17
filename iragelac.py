@@ -4,7 +4,7 @@
 # Contact - willrazorface90s@gmail.com
 # Coding - utf-8
 
-# Usage - python3.x iragelac.py -u [URL] -w [WORDLIST] -o [OUTPUT] --headers [PARAM1]: [VALUE1] [PARAM2]: [VALUE2] ...
+# Usage - python3.x iragelac.py -u [URL] -w [WORDLIST] -o [OUTPUT] -i [INTERVAL (MUST BE INTEGER)] --headers [PARAM1]: [VALUE1] [PARAM2]: [VALUE2] ...
 
 from argparse import ArgumentParser
 from termcolor import colored
@@ -68,7 +68,7 @@ def whois(urlink:str):
 		print('	', colored('[-]', 'red'), 'No information found on WhoIS',colored('[-]', 'red'))
 
 
-def crawler(wordlist:str, urlink:str):
+def crawler(wordlist:str, urlink:str, time: int):
 	if isfile(wordlist) is True:
 		with open(wordlist) as f:
 			urls = f.readlines()
@@ -79,6 +79,7 @@ def crawler(wordlist:str, urlink:str):
 			crawled = urlink+'/'+url.strip('\n')
 			try:
 				vrfy = get(crawled)
+				sleep(time)
 			except:
 				continue
 			if vrfy.status_code == 200:
@@ -113,12 +114,16 @@ ap.add_argument('-u', '--url', help='URL to the site', required=True)
 ap.add_argument('-o', '--output', help='Output file')
 ap.add_argument('-w', '--wordlist', help='Path to cralwing wordlist')
 ap.add_argument('--headers', help='Headers for the request', nargs='*')
+ap.add_argument('-i', '--interval',
+                help='Interval between requests (available if there is a word list to crawling) default - 0',
+                type=int, default=0)
 args = vars(ap.parse_args())
 
 url = args['url']
 output = args['output']
 wordlist = args['wordlist']
 headlist = args['headers']
+interval = args['interval']
 headers = []
 if headlist:
     for i in headlist:
@@ -170,7 +175,7 @@ if wordlist:
 	print(colored('___________________________________________________________', 'red','on_red'))
 	print(colored('ᴜʀʟ ᴄʀᴀᴡʟᴇʀ                                                ', 'white', 'on_red'))
 	print(colored('___________________________________________________________', 'red', 'on_red'), '\n')
-	urls = crawler(wordlist, url)
+	urls = crawler(wordlist, url, interval)
 
 if output:
 	date = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
