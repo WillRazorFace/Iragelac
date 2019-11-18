@@ -19,3 +19,7 @@ Iragelac, for the time being, can capture emails, links, whois domain informatio
 - Video Demonstration
 
 [![Watch the video](https://i.imgur.com/rN2t7xP.jpg)](https://youtu.be/Ls1u0oVof-w)
+
+## Contact	
+
+You can talk to me through this email <willrazorface90s@gmail.com>
