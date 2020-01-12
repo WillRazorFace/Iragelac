@@ -10,6 +10,7 @@ from argparse import ArgumentParser
 from termcolor import colored
 from bs4 import BeautifulSoup
 from requests import get
+from requests.exceptions import Timeout, ConnectionError, MissingSchema
 from re import findall
 from datetime import datetime
 from socket import gethostbyname
@@ -133,13 +134,13 @@ if headlist:
 
 try:
 	req = get(url, headers=headers)
-except requests.exceptions.Timeout:
+except Timeout:
 	print('\n', colored('[-]', 'red'), 'Timeout', colored('[-]','red'), '\n')
 	exit(1)
-except requests.exceptions.ConnectionError:
+except ConnectionError:
 	print('\n', colored('[-]','red'), 'Connection to site failed', colored('[-]','red'), '\n')
 	exit(1)
-except requests.exceptions.MissingSchema:
+except MissingSchema:
 	print('\n', colored('[-]', 'red'), 'Unrecognized URL schema. Specify "http://" or "https://"', colored('[-]','red'), '\n')
 	exit(1)
 
