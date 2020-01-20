@@ -4,7 +4,7 @@
 # Contact - willrazorface90s@gmail.com
 # Coding - utf-8
 
-# Usage - python3.x iragelac.py -u [URL] -w [WORDLIST] -o [OUTPUT] -i [INTERVAL (MUST BE INTEGER)] --headers [PARAM1]: [VALUE1] [PARAM2]: [VALUE2] ...
+# Usage - python3.x iragelac.py -u [URL] -w [WORDLIST] -o [OUTPUT] -i [INTERVAL (MUST BE INTEGER)] --cookies COOKIE1: value1 COOKIE2: value2 ... --headers PARAM1: value1 PARAM2: value2 ...
 
 from argparse import ArgumentParser
 from termcolor import colored
@@ -48,7 +48,6 @@ def linkfinder(html:str):
 
 
 def whois(urlink:str):
-	wi = ''
 	whoreq = get('https://www.whois.com/whois/{}'.format(urlink))
 	if whoreq.status_code == 200:
 		wi = ''
@@ -70,7 +69,7 @@ def whois(urlink:str):
 		print('	', colored('[-]', 'red'), 'No information found on WhoIS',colored('[-]', 'red'))
 
 
-def crawler(wordlist:str, urlink:str, time: int):
+def crawler(wordlist:str, urlink:str, time: int, headers={}, cookies={}):
 	if isfile(wordlist) is True:
 		with open(wordlist) as f:
 			urls = f.readlines()
@@ -78,9 +77,9 @@ def crawler(wordlist:str, urlink:str, time: int):
 		urlforb = 0
 		fndurls = []
 		for url in urls:
-			crawled = urlink+'/'+url.strip('\n')
+			crawled = urlink + '/' + url.strip('\n')
 			try:
-				vrfy = get(crawled)
+				vrfy = get(crawled, headers=headers, cookies=cookies)
 				sleep(time)
 			except:
 				continue
@@ -95,13 +94,15 @@ def crawler(wordlist:str, urlink:str, time: int):
 		if urlok or urlforb:
 			print('\n')
 			print('	CRAWLED', colored(urlok+urlforb, 'blue'), 'URL')
-			print('	',colored(urlok, 'green'), 'OK CODE')
-			print('	',colored(urlforb, 'yellow'), 'FORBIDDEN CODE','\n')
+			print('	', colored(urlok, 'green'), 'OK CODE')
+			print('	', colored(urlforb, 'yellow'), 'FORBIDDEN CODE', '\n')
 			return fndurls
 		else:
 			print('	', colored('[-]', 'red'), 'No URL crawled', colored('[-]', 'red'), '\n')
 	else:
-		print('	', colored('[-]','red'), 'The path entered for a wordlist is invalid. Check it out.',colored('[-]','red'))
+		print('	', colored('[-]', 'red'),
+			  'The path entered for a wordlist is invalid. Check it out.',
+			  colored('[-]', 'red'))
 
 
 iragelac = """ ___ ____      _    ____ _____ _        _    ____ 
@@ -112,9 +113,10 @@ iragelac = """ ___ ____      _    ____ _____ _        _    ____
 """
 
 ap = ArgumentParser(description="Iragelac Script")
-ap.add_argument('-u', '--url', help='URL to the site', required=True)
-ap.add_argument('-o', '--output', help='Output file')
-ap.add_argument('-w', '--wordlist', help='Path to cralwing wordlist')
+ap.add_argument('-u', '--url', help='URL to the site', required=True, type=str)
+ap.add_argument('-o', '--output', help='Output file', type=str)
+ap.add_argument('-w', '--wordlist', help='Path to cralwing wordlist', type=str)
+ap.add_argument('--cookies', help='Custom cookies for the connection', type=str, nargs='*')
 ap.add_argument('--headers', help='Headers for the request', nargs='*')
 ap.add_argument('-i', '--interval',
                 help='Interval between requests (available if there is a word list to crawling) default - 0',
@@ -124,16 +126,24 @@ args = vars(ap.parse_args())
 url = args['url']
 output = args['output']
 wordlist = args['wordlist']
+cookielist = args['cookies']
 headlist = args['headers']
 interval = args['interval']
 headers = []
+cookies = []
+
+if cookielist:
+	for i in cookielist:
+		cookies.append(i.replace(':', ''))
+	cookies = {cookies[i]: cookies[i+1] for i in range(0, len(cookies), 2)}
+
 if headlist:
-    for i in headlist:
-        headers.append(i.replace(':', ''))
-    headers = {headers[i]: headers[i+1] for i in range(0, len(headers), 2)}
+	for i in headlist:
+		headers.append(i.replace(':', ''))
+	headers = {headers[i]: headers[i+1] for i in range(0, len(headers), 2)}
 
 try:
-	req = get(url, headers=headers)
+	req = get(url, headers=headers, cookies=cookies)
 except Timeout:
 	print('\n', colored('[-]', 'red'), 'Timeout', colored('[-]','red'), '\n')
 	exit(1)
@@ -141,7 +151,9 @@ except ConnectionError:
 	print('\n', colored('[-]','red'), 'Connection to site failed', colored('[-]','red'), '\n')
 	exit(1)
 except MissingSchema:
-	print('\n', colored('[-]', 'red'), 'Unrecognized URL schema. Specify "http://" or "https://"', colored('[-]','red'), '\n')
+	print('\n', colored('[-]', 'red'),
+		  'Unrecognized URL schema. Specify "http://" or "https://"', colored('[-]','red'),
+		  '\n')
 	exit(1)
 
 ip = gethostbyname(url.strip('https://'))
@@ -153,7 +165,7 @@ print(iragelac)
 print('\n', colored('Host:', 'blue'), url, 
 			colored('Host IP:', 'blue'), ip, 
 			colored('Local Time:', 'blue'), localtime, 
-			colored('Host Server:','blue'), server, 
+			colored('Host Server:', 'blue'), server,
 			'\n')
 
 print(colored('___________________________________________________________', 'red', 'on_red'))
@@ -177,7 +189,7 @@ if wordlist:
 	print(colored('___________________________________________________________', 'red','on_red'))
 	print(colored('ᴜʀʟ ᴄʀᴀᴡʟᴇʀ                                                ', 'white', 'on_red'))
 	print(colored('___________________________________________________________', 'red', 'on_red'), '\n')
-	urls = crawler(wordlist, url, interval)
+	urls = crawler(wordlist, url, interval, headers, cookies)
 
 if output:
 	date = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
